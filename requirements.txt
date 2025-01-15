@@ -1,0 +1,5 @@
+jupyter 
+python-dotenv
+langchain
+openai
+langchain_community
