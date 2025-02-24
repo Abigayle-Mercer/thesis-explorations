@@ -15,9 +15,11 @@ This agent processes natural language commands to edit Jupyter notebooks, utiliz
    ```bash
    pip install -r requirements.txt
 2. Set up your environment:
+    ```bash
     Create a .env file and add your OpenAI API key:
     OPENAI_API_KEY="your_api_key"
 3. Run the agent:
+    ```bash
     % python main.py
 
 Note: When entering commands, make sure to refer to the notebook you want edited by name, the agent is capable of inferring which one you are referring to, but does need something to work off of, for example: 

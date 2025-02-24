@@ -1,0 +1,542 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "commands": [
+        {
+            "title": "Run Cell",
+            "description": "Runs the currently selected cell in the Jupyter notebook.",
+            "example_phrases": [
+                "Run this cell",
+                "Execute the selected cell",
+                "Go ahead and run the active code block"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:run-cell" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Run All Cells",
+            "description": "Runs all cells in the Jupyter notebook from top to bottom.",
+            "example_phrases": [
+                "Run everything",
+                "Execute all cells",
+                "Run the full notebook"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:run-all-cells" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Restart Kernel",
+            "description": "Restarts the Jupyter notebook kernel.",
+            "example_phrases": [
+                "Restart the kernel",
+                "Reboot the notebook",
+                "Restart computation"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:restart-kernel" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Restart Kernel and Run All Cells",
+            "description": "Restarts the Jupyter kernel and then runs all cells.",
+            "example_phrases": [
+                "Restart and rerun everything",
+                "Reset the kernel and execute the notebook",
+                "Reboot and run all"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:restart-run-all" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Cut Cell",
+            "description": "Cuts the currently selected cell, removing it from the notebook and placing it in the clipboard. If there is a cell below, the selection moves down to the next cell. If the cut cell is the last one, the selection moves up to the previous cell. If it was the only cell in the notebook, there will be no active selection.",
+            "example_phrases": [
+                "Cut the active cell",
+                "Remove this cell",
+                "Delete and copy this cell"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:cut-cell" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "toolbar": { "type": "boolean" },
+                            "activate": { "type": "boolean" }
+                        },
+                        "required": ["toolbar", "activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Delete Cell",
+            "description": "Deletes the currently selected cell without copying it to the clipboard. If there is a cell below, the selection moves down to the next cell. If the deleted cell is the last one, the selection moves up to the previous cell. If it was the only cell in the notebook, there will be no active selection.",
+            "example_phrases": [
+                "Delete this cell",
+                "Remove this code block",
+                "Erase this cell"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:delete-cell" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Copy Cell",
+            "description": "Copies the currently selected cell to the clipboard without deleting it.",
+            "example_phrases": [
+                "Copy this cell",
+                "Duplicate this cell",
+                "Store this code in clipboard"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:copy-cell" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Paste Cell Below",
+            "description": "Pastes the most recently copied or cut cell below the currently selected one.",
+            "example_phrases": [
+                "Paste below",
+                "Insert copied cell under this one",
+                "Drop this cell below"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:paste-cell-below" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Paste Cell Above",
+            "description": "Pastes the most recently copied or cut cell above the currently selected one.",
+            "example_phrases": [
+                "Paste above",
+                "Insert copied cell above this one",
+                "Drop this cell above"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:paste-cell-above" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Move Cell Up",
+            "description": "Moves the currently selected cell one position up.",
+            "example_phrases": [
+                "Move this cell up",
+                "Shift this cell above",
+                "Rearrange cell upwards"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:move-cell-up" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Move Cell Down",
+            "description": "Moves the currently selected cell one position down.",
+            "example_phrases": [
+                "Move this cell down",
+                "Shift this cell below",
+                "Rearrange cell downwards"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:move-cell-down" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Undo Last Cell Action",
+            "description": "Undoes the last operation performed on the notebook.",
+            "example_phrases": [
+                "Undo my last action",
+                "Revert the last change",
+                "Go back one step"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:undo-cell-action" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Redo Last Cell Action",
+            "description": "Redoes the last undone operation in the notebook.",
+            "example_phrases": [
+                "Redo my last change",
+                "Reapply the last operation",
+                "Bring back the previous action"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:redo-cell-action" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Insert Cell Below",
+            "description": "Inserts a new cell below the currently selected one.",
+            "example_phrases": [
+                "Add a new cell below",
+                "Insert a cell under this one",
+                "Create a new cell below"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:insert-cell-below" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" },
+                            "toolbar": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Insert Cell Above",
+            "description": "Inserts a new cell above the currently selected one.",
+            "example_phrases": [
+                "Add a new cell above",
+                "Insert a cell over this one",
+                "Create a new cell on top"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:insert-cell-above" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" },
+                            "toolbar": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Enter Command Mode",
+            "description": "Switches the Jupyter Notebook into command mode.",
+            "example_phrases": [
+                "Go to command mode",
+                "Switch to command mode",
+                "Exit edit mode and enter command mode"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:enter-command-mode" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Enter Edit Mode",
+            "description": "Switches the Jupyter Notebook into edit mode.",
+            "example_phrases": [
+                "Enter edit mode",
+                "Start editing this cell",
+                "Go to edit mode"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:enter-edit-mode" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Change Cell to Markdown",
+            "description": "Changes the currently selected cell to Markdown.",
+            "example_phrases": [
+                "Convert this cell to Markdown",
+                "Make this a Markdown cell",
+                "Switch to Markdown mode"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:change-cell-to-markdown" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        },
+        {
+            "title": "Merge Selected Cells",
+            "description": "Merges all currently selected cells into one.",
+            "example_phrases": [
+                "Merge these cells",
+                "Combine selected cells",
+                "Join the highlighted cells together"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:merge-cells" },
+                    "args": {}
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Merge Cell Above",
+            "description": "Merges the currently selected cell with the one above it.",
+            "example_phrases": [
+                "Merge this cell with the one above",
+                "Combine with the cell above",
+                "Join this cell upward"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:merge-cell-above" },
+                    "args": {}
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Merge Cell Below",
+            "description": "Merges the currently selected cell with the one below it.",
+            "example_phrases": [
+                "Merge this cell with the one below",
+                "Combine with the cell below",
+                "Join this cell downward"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:merge-cell-below" },
+                    "args": {}
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Create New Notebook",
+            "description": "Creates a new Jupyter Notebook.",
+            "example_phrases": [
+                "Create a new notebook",
+                "Open a blank notebook",
+                "Start a new notebook"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:create-new" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "cwd": { 
+                                "type": "string", 
+                                "description": "Optional working directory for the new notebook." 
+                            },
+                            "kernelId": { 
+                                "type": "string", 
+                                "description": "Optional kernel ID to associate with the new notebook." 
+                            },
+                            "kernelName": { 
+                                "type": "string", 
+                                "description": "Optional kernel name to use for the new notebook." 
+                            },
+                            "isPalette": { 
+                                "type": "boolean", 
+                                "description": "Indicates whether the command was executed from the Command Palette." 
+                            }
+                        }
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Move Cursor Up",
+            "description": "Moves the cursor selection up to the previous cell in the Jupyter Notebook.",
+            "example_phrases": [
+                "Move up",
+                "Select the cell above",
+                "Go to the previous cell"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:move-cursor-up" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Move Cursor Down",
+            "description": "Moves the cursor selection down to the next cell in the Jupyter Notebook.",
+            "example_phrases": [
+                "Move down",
+                "Select the cell below",
+                "Go to the next cell"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:move-cursor-down" },
+                    "args": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                "required": ["name"]
+            }
+        },
+        {
+            "title": "Run Cell and Advance",
+            "description": "Runs the currently selected cell and moves to the next one.",
+            "example_phrases": [
+                "Run this cell and move to the next",
+                "Execute and advance",
+                "Run and go to the next cell"
+            ],
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": { "const": "notebook:run-cell-and-select-next" },
+                    "args": {
+                        "type": "object",
+                        "properties": {
+                            "activate": { "type": "boolean" }
+                        },
+                        "required": ["activate"]
+                    }
+                },
+                "required": ["name", "args"]
+            }
+        }
+        
+        
+    ]
+}
