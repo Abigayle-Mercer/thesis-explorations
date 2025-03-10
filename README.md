@@ -14,3 +14,6 @@ Inside `src/`:
 
 - **Notebook-Operations**  
   *An interactive tool for manipulating Jupyter notebooks using AI, enabling operations such as reading, writing, adding, and deleting cells through natural language commands.*
+
+- **Testing**
+  *An explorative testing ground aimed at iteratively improving on tool documentation for better agent use. 

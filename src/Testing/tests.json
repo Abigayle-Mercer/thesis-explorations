@@ -1,0 +1,40 @@
+{
+    "delete_cell": [
+        {"command": "remove the first cell", "expected_tools": ["delete_cell"]},
+        {"command": "cut the second cell", "expected_tools": ["delete_cell"]},
+        {"command": "delete the third cell", "expected_tools": ["delete_cell"]},
+        {"command": "get rid of the 4th cell", "expected_tools": ["delete_cell"]},
+        {"command": "take out the fifth cell", "expected_tools": ["delete_cell"]},
+        {"command": "discard the 6th cell", "expected_tools": ["delete_cell"]}
+    ],
+    "add_cell": [
+        {"command": "add a cell to the top of the notebook", "expected_tools": ["add_cell"]},
+        {"command": "add a cell after the third cell of the notebook", "expected_tools": ["add_cell"]},
+        {"command": "put a new cell at the top of the notebook", "expected_tools": ["add_cell"]},
+        {"command": "make a new cell under the fifth", "expected_tools": ["add_cell"]}
+                ],
+    "write_to_cell": [
+        {"command": "make the second cell empty", "expected_tools": ["write_to_cell"]},
+        {"command": "print the time of day out in the 1st cell", "expected_tools": ["write_to_cell"]},
+        {"command": "make the third cell run a for loop that prints the first 5 powers of two", "expected_tools": ["write_to_cell"]},
+        {"command": "have the second cell print 'hi'", "expected_tools": ["write_to_cell"]}
+    ],
+    "read_notebook": [
+        {"command": "read the notebook", "expected_tools": ["read_notebook"]},
+        {"command": "get all the contents of the notebook", "expected_tools": ["read_notebook"]},
+        {"command": "summarize the notebook in a markdown cell at the bottom", "expected_tools": ["read_notebook", "add_cell", "write_to_cell"]},
+        {"command": "remove all the empty cells", "expected_tools": ["read_notebook", "delete_cell"]}
+    ],
+    "cell_count": [
+        {"command": "get the total cell count", "expected_tools": ["cell_count"]},
+        {"command": "add a cell to the bottom of the notebook", "expected_tools": ["cell_count", "add_cell"]},
+        {"command": "remove the last cell in the notebook", "expected_tools": ["cell_count", "delete_cell"]},
+        {"command": "print the current date and time in the last cell of the notebook", "expected_tools": ["cell_count", "read_cell", "write_to_cell"]}
+    ],
+    "read_cell": [
+        {"command": "read the 5th cell", "expected_tools": ["read_cell"]},
+        {"command": "look at the first cell", "expected_tools": ["read_cell"]},
+        {"command": "remove the print statements from the first cell", "expected_tools": ["read_cell", "write_to_cell"]}
+    ]
+    
+}

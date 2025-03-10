@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 import os
 import json
 
+# Import tools
+from tools.tools_2 import delete_cell, add_cell, write_to_cell, read_cell, cell_count, read_notebook
+
 
 
 load_dotenv()
@@ -33,147 +36,6 @@ memory = MemorySaver()
 
 
 
-# TOOLS: 
-
-@tool("cut_cell", return_direct=True)
-def cut_cell(file_path: str, id: int) -> str:
-    """
-    Removes a cell from the notebook at the given ID and returns the cut cell's content.
-    """
-    try:
-        # Load notebook
-        with open(file_path, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-
-        # Ensure valid cell index
-        if 0 <= id < len(notebook["cells"]):
-            cut_cell = notebook["cells"].pop(id)
-            
-            # Save updated notebook
-            with open(file_path, "w", encoding="utf-8") as f:
-                json.dump(notebook, f, indent=2)
-
-            return f"✅ Cut cell {id}: {cut_cell['source']}"
-        else:
-            return f"❌ Invalid cell ID: {id}"
-
-    except Exception as e:
-        return f"❌ Error cutting cell: {str(e)}"
-
-
-@tool("add_cell", return_direct=True)
-def add_cell(file_path: str, id: int, cell_type: str = "code") -> str:
-    """
-    Adds a new empty cell (code or markdown) at the specified position.
-    """
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-
-        # Define new cell structure
-        new_cell = {
-            "cell_type": cell_type,
-            "metadata": {},
-            "source": [],
-            "outputs": [] if cell_type == "code" else None
-        }
-
-        # Ensure index is within range
-        id = max(0, min(id, len(notebook["cells"])))  # Clamp ID within range
-        notebook["cells"].insert(id, new_cell)
-
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(notebook, f, indent=2)
-
-        return f"✅ Added {cell_type} cell at position {id}."
-
-    except Exception as e:
-        return f"❌ Error adding cell: {str(e)}"
-
-
-@tool("write_to_cell", return_direct=True)
-def write_to_cell(file_path: str, id: int, content: str) -> str:
-    """
-    Writes content to a cell at a given ID.
-    """
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-
-        if 0 <= id < len(notebook["cells"]):
-            notebook["cells"][id]["source"] = content.split("\n")  # Split into list for Jupyter format
-            
-            with open(file_path, "w", encoding="utf-8") as f:
-                json.dump(notebook, f, indent=2)
-
-            return f"✅ Updated cell {id} with content:\n{content}"
-        else:
-            return f"❌ Invalid cell ID: {id}"
-
-    except Exception as e:
-        return f"❌ Error writing to cell: {str(e)}"
-
-@tool("read_cell", return_direct=True)
-def read_cell(file_path: str, id: int) -> str:
-    """
-    Reads the full content of a specific cell in a notebook, including its type, execution count, metadata, outputs, and source code.
-    """
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-
-        if 0 <= id < len(notebook["cells"]):
-            cell_data = notebook["cells"][id]
-            return json.dumps(cell_data, indent=2)  # Return full cell as JSON-formatted string
-        else:
-            return f"❌ Invalid cell ID: {id}"
-
-    except Exception as e:
-        return f"❌ Error reading cell: {str(e)}"
-    
-    
-@tool("get_max_cell_index", return_direct=True)
-def get_max_cell_index(file_path: str) -> str:
-    """
-    Returns the total number of cells in the Jupyter notebook, allowing the agent to determine the last cell index.
-    """
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-
-        max_index = len(notebook["cells"]) - 1  # Last cell index
-        return f"✅ The last cell index is {max_index}."
-
-    except Exception as e:
-        return f"❌ Error getting max cell index: {str(e)}"
-
-
-
-
-@tool("gather_notebook_context", return_direct=True)
-def gather_notebook_context(file_path: str) -> str:
-    """
-    Retrieves all cell contents from a Jupyter notebook to provide necessary context 
-    before performing operations like summarization, editing, or modifications.
-    This should be called first when the agent needs to understand the notebook contents.
-    """
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-
-        # Extract all cells as text
-        cells_content = [
-            f"Cell {i} ({cell['cell_type']}):\n{''.join(cell['source'])}"
-            for i, cell in enumerate(notebook["cells"])
-        ]
-
-        return "\n\n".join(cells_content)
-
-    except Exception as e:
-        return f"❌ Error reading notebook: {str(e)}"
-
-
-
 def get_directory_contents():
     """Lists all Jupyter Notebook files in the current directory."""
     try:
@@ -185,7 +47,7 @@ def get_directory_contents():
 
 
 
-tools = [cut_cell, add_cell, write_to_cell, read_cell, get_max_cell_index, gather_notebook_context]
+tools = [delete_cell, add_cell, write_to_cell, read_cell, cell_count, read_notebook]
 model = llm.bind_tools(tools)
 tool_node = ToolNode(tools=tools)
 
@@ -275,7 +137,7 @@ def call_tool(state):
         return {"messages": messages, "file_path": file_path}
 
     last_message = messages[-1]
-    print(last_message.additional_kwargs["tool_calls"][0]["function"])
+    print("CALLING TOOL: ", last_message.additional_kwargs["tool_calls"][0]["function"])
 
     # 🔍 Ensure last message is an AIMessage with tool_calls
     if "tool_calls" not in last_message.additional_kwargs or not last_message.additional_kwargs["tool_calls"]:
@@ -322,6 +184,9 @@ builder.add_edge("call_tool", "notebook_editor")  # Return to editor after tool 
 graph = builder.compile(checkpointer=memory)
 
 
+
+def get_agent(): 
+    return graph
 
 
 
